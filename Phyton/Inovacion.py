@@ -2,117 +2,116 @@ import streamlit as st
 
 st.set_page_config(page_title="Diagnóstico IA", layout="centered")
 
-# Frases comunes -> síntomas clave
+# 🧠 Frases comunes -> síntomas clave (muy ampliado)
 frases_a_sintomas = {
-    "dolor de cabeza": "dolor de cabeza",
-    "me duele la cabeza": "dolor de cabeza",
-    "fiebre": "fiebre",
-    "me siento caliente": "fiebre",
-    "dolor muscular": "dolores musculares",
-    "dolores musculares": "dolores musculares",
-    "me duelen los músculos": "dolores musculares",
-    "no puedo dormir": "insomnio",
-    "duermo mal": "insomnio",
-    "me cuesta dormir": "insomnio",
-    "cansancio": "fatiga",
-    "estoy cansado": "fatiga",
-    "me siento cansado": "fatiga",
-    "tos seca": "tos seca",
-    "tos": "tos seca",
-    "dolor de garganta": "dolor de garganta",
-    "me duele la garganta": "dolor de garganta",
-    "presión en el pecho": "dolor en el pecho",
-    "dificultad para respirar": "dificultad para respirar",
-    "mareo": "mareo",
-    "náuseas": "náuseas",
-    "vómito": "vómitos",
-    "no tengo ganas": "apatía",
-    "me siento triste": "depresión",
-    "tristeza": "depresión",
-    "ansioso": "ansiedad",
-    "me siento ansioso": "ansiedad",
+    "dolor de cabeza": "dolor de cabeza", "me duele la cabeza": "dolor de cabeza", "presión en la cabeza": "dolor de cabeza",
+    "fiebre": "fiebre", "temperatura alta": "fiebre", "me siento caliente": "fiebre",
+    "escalofríos": "escalofríos", "tiritando": "escalofríos",
+    "dolor muscular": "dolores musculares", "me duele el cuerpo": "dolores musculares",
+    "no puedo dormir": "insomnio", "duermo mal": "insomnio", "me despierto en la noche": "insomnio",
+    "cansancio": "fatiga", "estoy cansado": "fatiga", "me siento agotado": "fatiga", "debilidad": "fatiga",
+    "tos seca": "tos seca", "tengo tos seca": "tos seca",
+    "tos con flema": "tos con flema", "flema": "tos con flema",
+    "nariz tapada": "congestión nasal", "mocos": "congestión nasal", "goteo nasal": "congestión nasal",
+    "me duele la garganta": "dolor de garganta", "ardor en la garganta": "dolor de garganta",
+    "me cuesta respirar": "dificultad para respirar", "no respiro bien": "dificultad para respirar",
+    "náuseas": "náuseas", "ganas de vomitar": "náuseas",
+    "vómito": "vómitos", "vomité": "vómitos",
+    "diarrea": "diarrea", "evacuaciones líquidas": "diarrea",
+    "dolor de estómago": "dolor estomacal", "malestar estomacal": "dolor estomacal", "retorcijones": "dolor estomacal",
+    "acidez": "reflujo", "reflujo": "reflujo",
+    "me siento triste": "depresión", "tristeza": "depresión",
+    "nervioso": "ansiedad", "ansioso": "ansiedad", "ataques de pánico": "ansiedad",
     "estresado": "estrés",
-    "me siento estresado": "estrés",
+    "visión borrosa": "visión borrosa",
+    "ojos rojos": "irritación ocular",
+    "picazón en los ojos": "alergia ocular", "ojos llorosos": "alergia ocular",
+    "dolor en los oídos": "dolor de oído", "zumbido en los oídos": "dolor de oído",
+    "palpitaciones": "taquicardia", "latidos rápidos": "taquicardia",
+    "mareo": "mareo", "me siento mareado": "mareo",
+    "pérdida del olfato": "anosmia", "no huelo nada": "anosmia",
+    "dolor lumbar": "dolor de espalda", "me duele la espalda baja": "dolor de espalda"
 }
 
-# Enfermedades con sus síntomas
+# 😷 Enfermedades y sus síntomas
 enfermedades = {
-    "Gripe": ["fiebre", "tos seca", "dolor de garganta", "dolores musculares", "fatiga"],
-    "COVID-19": ["fiebre", "tos seca", "dificultad para respirar", "dolores musculares", "fatiga"],
-    "Migraña": ["dolor de cabeza", "náuseas", "fatiga", "mareo"],
-    "Insomnio": ["insomnio", "fatiga", "ansiedad"],
-    "Estrés": ["estrés", "fatiga", "insomnio", "dolor de cabeza"],
-    "Ansiedad": ["ansiedad", "insomnio", "mareo", "dificultad para respirar"],
+    "Gripe": ["fiebre", "dolor de cabeza", "dolores musculares", "fatiga", "tos seca", "escalofríos"],
+    "COVID-19": ["fiebre", "tos seca", "dificultad para respirar", "dolores musculares", "fatiga", "dolor de garganta", "anosmia"],
+    "Resfriado común": ["congestión nasal", "tos seca", "dolor de garganta", "fiebre", "fatiga"],
+    "Sinusitis": ["dolor de cabeza", "congestión nasal", "fiebre", "dolor de garganta"],
+    "Gastritis": ["dolor estomacal", "náuseas", "vómitos", "reflujo"],
+    "Migraña": ["dolor de cabeza", "náuseas", "mareo", "visión borrosa", "fatiga"],
+    "Ansiedad": ["ansiedad", "insomnio", "mareo", "dificultad para respirar", "taquicardia"],
     "Depresión": ["depresión", "apatía", "insomnio", "fatiga"],
-    "Neumonía": ["fiebre", "tos seca", "dolor en el pecho", "dificultad para respirar"],
-    "Resfriado común": ["fiebre", "tos seca", "dolor de garganta", "fatiga"],
+    "Insomnio": ["insomnio", "fatiga", "ansiedad"],
+    "Estrés": ["estrés", "fatiga", "dolor de cabeza", "insomnio"],
+    "Neumonía": ["fiebre", "tos con flema", "dolor en el pecho", "dificultad para respirar", "fatiga"],
+    "Gastroenteritis": ["diarrea", "náuseas", "vómitos", "dolor estomacal", "fiebre"],
+    "Alergia respiratoria": ["tos seca", "congestión nasal", "picazón en los ojos", "fatiga"],
+    "Otitis": ["dolor de oído", "fiebre", "zumbido en los oídos"],
+    "Conjuntivitis": ["ojos rojos", "picazón en los ojos"],
+    "Lumbalgia": ["dolor de espalda", "fatiga", "dolores musculares"]
 }
 
-# Recomendaciones para la más probable
+# ✅ Recomendaciones por enfermedad
 recomendaciones = {
-    "Gripe": ["Descansa mucho", "Toma líquidos", "Consulta al médico si la fiebre es alta"],
-    "COVID-19": ["Aíslate", "Consulta a un médico", "Hidrátate bien"],
-    "Migraña": ["Evita luces fuertes", "Descansa en un lugar tranquilo", "Consulta si el dolor es frecuente"],
-    "Insomnio": ["Evita pantallas antes de dormir", "Mantén una rutina de sueño", "Haz respiraciones profundas"],
-    "Estrés": ["Realiza ejercicios de relajación", "Habla con alguien de confianza", "Descansa"],
-    "Ansiedad": ["Haz respiración lenta", "Evita la cafeína", "Busca apoyo emocional"],
-    "Depresión": ["Busca apoyo emocional", "Haz actividad física ligera", "Consulta a un profesional"],
-    "Neumonía": ["Consulta urgente al médico", "Descansa", "Sigue el tratamiento recetado"],
-    "Resfriado común": ["Descansa", "Hidrátate", "Alivia los síntomas con medicamentos suaves"],
+    "Gripe": ["Descansa", "Toma líquidos calientes", "Evita el frío"],
+    "COVID-19": ["Aíslate", "Consulta al médico", "Hidrátate bien"],
+    "Resfriado común": ["Toma infusiones", "Descansa", "Ventila tu habitación"],
+    "Sinusitis": ["Haz vaporizaciones", "Bebe agua", "Consulta si no mejora"],
+    "Gastritis": ["Evita comidas irritantes", "No bebas alcohol", "Consulta si persiste"],
+    "Migraña": ["Evita luces fuertes", "Descansa en silencio", "Toma analgésicos recomendados"],
+    "Ansiedad": ["Respira profundo", "Evita café", "Haz ejercicio ligero"],
+    "Depresión": ["Busca apoyo", "Haz ejercicio", "Consulta a un psicólogo"],
+    "Insomnio": ["Crea una rutina nocturna", "Apaga pantallas", "Evita cafeína"],
+    "Estrés": ["Haz pausas activas", "Respira hondo", "Habla con alguien"],
+    "Neumonía": ["Consulta al médico", "Toma medicamentos", "Descansa bien"],
+    "Gastroenteritis": ["Bebe suero oral", "Evita comidas pesadas", "Consulta si se prolonga"],
+    "Alergia respiratoria": ["Evita alérgenos", "Usa antihistamínicos", "Limpia bien tu entorno"],
+    "Otitis": ["Consulta al médico", "No mojes el oído", "Toma analgésicos"],
+    "Conjuntivitis": ["Evita tocarte los ojos", "Lava tus manos", "Consulta si hay secreción"],
+    "Lumbalgia": ["Aplica calor local", "Evita esfuerzos", "Consulta si persiste"]
 }
 
-# Detectar síntomas en la frase
-def detectar_sintomas(frase):
-    sintomas = []
-    frase = frase.lower()
-    for clave, sintoma in frases_a_sintomas.items():
-        if clave in frase:
-            sintomas.append(sintoma)
-    return list(set(sintomas))
+def procesar_sintomas(texto):
+    sintomas_detectados = []
+    texto = texto.lower()
+    for frase, sintoma in frases_a_sintomas.items():
+        if frase in texto:
+            sintomas_detectados.append(sintoma)
+    return list(set(sintomas_detectados))
 
-# Diagnóstico basado en coincidencias
-def diagnostico(sintomas):
+def diagnosticar(sintomas_usuario):
     resultados = {}
-    for enfermedad, sintomas_enf in enfermedades.items():
-        coincidencias = set(sintomas).intersection(sintomas_enf)
-        if coincidencias:
-            porcentaje = round((len(coincidencias) / len(sintomas_enf)) * 100, 1)
-            resultados[enfermedad] = porcentaje
-    return sorted(resultados.items(), key=lambda x: x[1], reverse=True)[:5]
+    for enfermedad, sintomas in enfermedades.items():
+        coincidencias = set(sintomas_usuario) & set(sintomas)
+        probabilidad = len(coincidencias) / len(sintomas)
+        if probabilidad > 0:
+            resultados[enfermedad] = round(probabilidad * 100, 2)
+    resultados_ordenados = dict(sorted(resultados.items(), key=lambda x: x[1], reverse=True))
+    top5 = dict(list(resultados_ordenados.items())[:5])
+    return top5
 
-# Interfaz
-st.title("🤖 Diagnóstico IA")
-st.write("Describe cómo te sientes o tus síntomas. Ej: *Tengo fiebre y dolor de cabeza*")
+st.title("🤖 IA de Diagnóstico de Enfermedades")
+entrada = st.text_area("Describe tus síntomas lo más naturalmente posible:")
 
-entrada = st.text_area("✍️ Escribe aquí:")
-
-if st.button("🔍 Analizar"):
-    if not entrada.strip():
-        st.warning("Por favor escribe algo.")
-    else:
-        sintomas_detectados = detectar_sintomas(entrada)
-        if not sintomas_detectados:
-            st.error("No se reconocieron síntomas. Intenta escribirlo de otra forma.")
+if st.button("Diagnosticar"):
+    sintomas_usuario = procesar_sintomas(entrada)
+    if sintomas_usuario:
+        st.success(f"🩺 Síntomas detectados: {', '.join(sintomas_usuario)}")
+        resultados = diagnosticar(sintomas_usuario)
+        if resultados:
+            enfermedad_principal = next(iter(resultados))
+            st.subheader("🔎 Enfermedades probables:")
+            for enf, prob in resultados.items():
+                st.write(f"**{enf}** — {prob}%")
+            st.subheader(f"💡 Recomendaciones para: {enfermedad_principal}")
+            for rec in recomendaciones.get(enfermedad_principal, ["Consulta a un profesional."]):
+                st.markdown(f"- {rec}")
         else:
-            resultados = diagnostico(sintomas_detectados)
-            if not resultados:
-                st.warning("No se encontró un diagnóstico probable.")
-            else:
-                st.subheader("🩺 Diagnósticos más probables:")
-                for i, (enf, porc) in enumerate(resultados):
-                    st.markdown(f"**{i+1}. {enf}** — {porc}%")
-                    if i == 0 and enf in recomendaciones:
-                        st.write("💡 Recomendaciones:")
-                        for r in recomendaciones[enf]:
-                            st.write(f"- {r}")
-                st.markdown("---")
-                st.write("🧠 **Síntomas detectados:**")
-                for s in sintomas_detectados:
-                    st.write(f"- {s}")
+            st.warning("No se pudo determinar una enfermedad probable.")
+    else:
+        st.warning("No se detectaron síntomas conocidos. Intenta describirlo de otra forma.")
 
-# Créditos (al pie de página)
 st.markdown("---")
-st.markdown("### 👥 Creado por:")
-st.markdown("- **Rafah Gondola**")
-st.markdown("- **Adrián Abadía**")
-st.markdown("- **Guillermo Sánchez**")
+st.caption("Creado por Rafah Gondola, Adrián Abadia y Guillermo Sánchez")
