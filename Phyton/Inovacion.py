@@ -109,3 +109,10 @@ if st.button("🔍 Analizar"):
                 st.write("🧠 **Síntomas detectados:**")
                 for s in sintomas_detectados:
                     st.write(f"- {s}")
+
+# Créditos (al pie de página)
+st.markdown("---")
+st.markdown("### 👥 Creado por:")
+st.markdown("- **Rafah Gondola**")
+st.markdown("- **Adrián Abadía**")
+st.markdown("- **Guillermo Sánchez**")
