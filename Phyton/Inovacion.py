@@ -1,78 +1,86 @@
 import streamlit as st
 
-st.set_page_config(page_title="Diagnóstico IA", layout="centered")
+st.set_page_config(page_title="IA Diagnóstico Emocional y Físico", layout="centered")
 
-# 🧠 Frases comunes -> síntomas clave (muy ampliado)
+# Frases comunes -> síntomas físicos y emocionales
 frases_a_sintomas = {
-    "dolor de cabeza": "dolor de cabeza", "me duele la cabeza": "dolor de cabeza", "presión en la cabeza": "dolor de cabeza",
-    "fiebre": "fiebre", "temperatura alta": "fiebre", "me siento caliente": "fiebre",
+    # Físicos
+    "me duele la cabeza": "dolor de cabeza", "dolor de cabeza": "dolor de cabeza",
+    "tengo fiebre": "fiebre", "temperatura alta": "fiebre", "me siento caliente": "fiebre",
     "escalofríos": "escalofríos", "tiritando": "escalofríos",
-    "dolor muscular": "dolores musculares", "me duele el cuerpo": "dolores musculares",
-    "no puedo dormir": "insomnio", "duermo mal": "insomnio", "me despierto en la noche": "insomnio",
-    "cansancio": "fatiga", "estoy cansado": "fatiga", "me siento agotado": "fatiga", "debilidad": "fatiga",
-    "tos seca": "tos seca", "tengo tos seca": "tos seca",
-    "tos con flema": "tos con flema", "flema": "tos con flema",
-    "nariz tapada": "congestión nasal", "mocos": "congestión nasal", "goteo nasal": "congestión nasal",
+    "me duele el cuerpo": "dolores musculares", "dolor muscular": "dolores musculares", "dolores en los músculos": "dolores musculares",
+    "no puedo dormir": "insomnio", "duermo mal": "insomnio", "insomnio": "insomnio",
+    "estoy cansado": "fatiga", "me siento agotado": "fatiga", "cansancio": "fatiga", "debilidad": "fatiga",
+    "tengo tos seca": "tos seca", "tos seca": "tos seca",
+    "tengo flema": "tos con flema", "tos con flema": "tos con flema",
+    "tengo mocos": "congestión nasal", "nariz tapada": "congestión nasal", "goteo nasal": "congestión nasal",
     "me duele la garganta": "dolor de garganta", "ardor en la garganta": "dolor de garganta",
-    "me cuesta respirar": "dificultad para respirar", "no respiro bien": "dificultad para respirar",
+    "no respiro bien": "dificultad para respirar", "me cuesta respirar": "dificultad para respirar",
     "náuseas": "náuseas", "ganas de vomitar": "náuseas",
-    "vómito": "vómitos", "vomité": "vómitos",
+    "vomité": "vómitos", "vómito": "vómitos",
     "diarrea": "diarrea", "evacuaciones líquidas": "diarrea",
-    "dolor de estómago": "dolor estomacal", "malestar estomacal": "dolor estomacal", "retorcijones": "dolor estomacal",
-    "acidez": "reflujo", "reflujo": "reflujo",
-    "me siento triste": "depresión", "tristeza": "depresión",
-    "nervioso": "ansiedad", "ansioso": "ansiedad", "ataques de pánico": "ansiedad",
-    "estresado": "estrés",
+    "dolor de estómago": "dolor estomacal", "retorcijones": "dolor estomacal", "malestar estomacal": "dolor estomacal",
+    "reflujo": "reflujo", "acidez": "reflujo",
     "visión borrosa": "visión borrosa",
-    "ojos rojos": "irritación ocular",
-    "picazón en los ojos": "alergia ocular", "ojos llorosos": "alergia ocular",
-    "dolor en los oídos": "dolor de oído", "zumbido en los oídos": "dolor de oído",
-    "palpitaciones": "taquicardia", "latidos rápidos": "taquicardia",
+    "ojos rojos": "ojos irritados", "picazón en los ojos": "ojos irritados", "ojos llorosos": "ojos irritados",
+    "zumbido en los oídos": "dolor de oídos", "dolor en los oídos": "dolor de oídos",
+    "latidos rápidos": "palpitaciones", "palpitaciones": "palpitaciones",
     "mareo": "mareo", "me siento mareado": "mareo",
-    "pérdida del olfato": "anosmia", "no huelo nada": "anosmia",
-    "dolor lumbar": "dolor de espalda", "me duele la espalda baja": "dolor de espalda"
+    "no huelo nada": "pérdida del olfato", "pérdida del olfato": "pérdida del olfato",
+    "me duele la espalda": "dolor lumbar", "dolor lumbar": "dolor lumbar",
+    
+    # Emocionales
+    "me siento triste": "tristeza", "estoy triste": "tristeza",
+    "me siento vacío": "apatía", "sin ganas de nada": "apatía", "no quiero hacer nada": "apatía",
+    "estoy estresado": "estrés", "siento mucho estrés": "estrés", "me siento presionado": "estrés",
+    "tengo ansiedad": "ansiedad", "me siento ansioso": "ansiedad", "estoy nervioso": "ansiedad",
+    "me altero fácilmente": "irritabilidad", "me enojo fácil": "irritabilidad",
+    "no me concentro": "niebla mental", "me cuesta concentrarme": "niebla mental", "mi mente está nublada": "niebla mental",
+    "me siento inquieto": "ansiedad", "me siento mal emocionalmente": "tristeza",
+    "no tengo motivación": "apatía", "me siento apagado": "apatía",
 }
 
-# 😷 Enfermedades y sus síntomas
+# Enfermedades ampliadas
 enfermedades = {
-    "Gripe": ["fiebre", "dolor de cabeza", "dolores musculares", "fatiga", "tos seca", "escalofríos"],
-    "COVID-19": ["fiebre", "tos seca", "dificultad para respirar", "dolores musculares", "fatiga", "dolor de garganta", "anosmia"],
-    "Resfriado común": ["congestión nasal", "tos seca", "dolor de garganta", "fiebre", "fatiga"],
-    "Sinusitis": ["dolor de cabeza", "congestión nasal", "fiebre", "dolor de garganta"],
-    "Gastritis": ["dolor estomacal", "náuseas", "vómitos", "reflujo"],
-    "Migraña": ["dolor de cabeza", "náuseas", "mareo", "visión borrosa", "fatiga"],
-    "Ansiedad": ["ansiedad", "insomnio", "mareo", "dificultad para respirar", "taquicardia"],
-    "Depresión": ["depresión", "apatía", "insomnio", "fatiga"],
-    "Insomnio": ["insomnio", "fatiga", "ansiedad"],
-    "Estrés": ["estrés", "fatiga", "dolor de cabeza", "insomnio"],
-    "Neumonía": ["fiebre", "tos con flema", "dolor en el pecho", "dificultad para respirar", "fatiga"],
-    "Gastroenteritis": ["diarrea", "náuseas", "vómitos", "dolor estomacal", "fiebre"],
-    "Alergia respiratoria": ["tos seca", "congestión nasal", "picazón en los ojos", "fatiga"],
-    "Otitis": ["dolor de oído", "fiebre", "zumbido en los oídos"],
-    "Conjuntivitis": ["ojos rojos", "picazón en los ojos"],
-    "Lumbalgia": ["dolor de espalda", "fatiga", "dolores musculares"]
+    "Gripe": ["fiebre", "dolor de cabeza", "fatiga", "tos seca", "escalofríos", "dolores musculares"],
+    "Resfriado común": ["congestión nasal", "tos seca", "dolor de garganta", "fiebre"],
+    "COVID-19": ["fiebre", "tos seca", "fatiga", "dolor de cabeza", "dificultad para respirar", "pérdida del olfato"],
+    "Gastritis por ansiedad": ["dolor estomacal", "náuseas", "ansiedad", "insomnio"],
+    "Estrés crónico": ["estrés", "dolor de cabeza", "dolores musculares", "insomnio", "fatiga"],
+    "Depresión": ["tristeza", "apatía", "insomnio", "fatiga", "niebla mental"],
+    "Ansiedad generalizada": ["ansiedad", "estrés", "insomnio", "palpitaciones", "dificultad para respirar"],
+    "Fatiga emocional": ["apatía", "fatiga", "estrés", "tristeza"],
+    "Sinusitis": ["dolor de cabeza", "congestión nasal", "fiebre", "ojos irritados"],
+    "Migraña": ["dolor de cabeza", "náuseas", "visión borrosa", "fatiga"],
+    "Otitis": ["dolor de oídos", "fiebre", "mareo"],
+    "Reflujo gástrico": ["reflujo", "dolor estomacal", "náuseas"],
+    "Infección estomacal": ["diarrea", "dolor estomacal", "náuseas", "vómitos", "fiebre"],
+    "Insomnio crónico": ["insomnio", "niebla mental", "fatiga", "estrés"],
+    "Trastorno de ansiedad": ["ansiedad", "palpitaciones", "insomnio", "estrés"],
+    "Síndrome de burnout": ["fatiga", "apatía", "estrés", "tristeza", "niebla mental"],
 }
 
-# ✅ Recomendaciones por enfermedad
+# Recomendaciones
 recomendaciones = {
-    "Gripe": ["Descansa", "Toma líquidos calientes", "Evita el frío"],
-    "COVID-19": ["Aíslate", "Consulta al médico", "Hidrátate bien"],
-    "Resfriado común": ["Toma infusiones", "Descansa", "Ventila tu habitación"],
-    "Sinusitis": ["Haz vaporizaciones", "Bebe agua", "Consulta si no mejora"],
-    "Gastritis": ["Evita comidas irritantes", "No bebas alcohol", "Consulta si persiste"],
-    "Migraña": ["Evita luces fuertes", "Descansa en silencio", "Toma analgésicos recomendados"],
-    "Ansiedad": ["Respira profundo", "Evita café", "Haz ejercicio ligero"],
-    "Depresión": ["Busca apoyo", "Haz ejercicio", "Consulta a un psicólogo"],
-    "Insomnio": ["Crea una rutina nocturna", "Apaga pantallas", "Evita cafeína"],
-    "Estrés": ["Haz pausas activas", "Respira hondo", "Habla con alguien"],
-    "Neumonía": ["Consulta al médico", "Toma medicamentos", "Descansa bien"],
-    "Gastroenteritis": ["Bebe suero oral", "Evita comidas pesadas", "Consulta si se prolonga"],
-    "Alergia respiratoria": ["Evita alérgenos", "Usa antihistamínicos", "Limpia bien tu entorno"],
-    "Otitis": ["Consulta al médico", "No mojes el oído", "Toma analgésicos"],
-    "Conjuntivitis": ["Evita tocarte los ojos", "Lava tus manos", "Consulta si hay secreción"],
-    "Lumbalgia": ["Aplica calor local", "Evita esfuerzos", "Consulta si persiste"]
+    "Gripe": ["Descansa bien", "Toma líquidos calientes", "Evita cambios bruscos de temperatura"],
+    "Resfriado común": ["Toma infusiones naturales", "Mantente hidratado", "Usa pañuelos limpios"],
+    "COVID-19": ["Aíslate", "Consulta al médico", "Monitorea tu oxígeno"],
+    "Gastritis por ansiedad": ["Evita café y picante", "Relájate con respiración", "Come en horarios regulares"],
+    "Estrés crónico": ["Haz pausas activas", "Medita 10 min al día", "Consulta si persiste"],
+    "Depresión": ["Habla con alguien de confianza", "Haz actividad física suave", "Consulta a un psicólogo"],
+    "Ansiedad generalizada": ["Haz ejercicios de respiración", "Evita estimulantes", "Busca ayuda emocional"],
+    "Fatiga emocional": ["Descansa", "Realiza actividades agradables", "No te sobrecargues de trabajo"],
+    "Sinusitis": ["Haz vaporizaciones", "Usa solución salina nasal", "Consulta si el dolor es fuerte"],
+    "Migraña": ["Evita luces fuertes", "Descansa en lugar oscuro", "Consulta si es frecuente"],
+    "Otitis": ["Evita mojar los oídos", "Consulta al médico", "Aplica calor local con cuidado"],
+    "Reflujo gástrico": ["Evita acostarte después de comer", "Come porciones pequeñas", "Evita grasas y ácidos"],
+    "Infección estomacal": ["Toma suero oral", "Evita lácteos", "Consulta si hay fiebre persistente"],
+    "Insomnio crónico": ["Evita pantallas antes de dormir", "Haz rutina nocturna relajante", "Consulta si persiste"],
+    "Trastorno de ansiedad": ["Practica mindfulness", "Habla con un especialista", "Evita situaciones de tensión innecesaria"],
+    "Síndrome de burnout": ["Toma tiempo libre", "Organiza tu carga laboral", "Busca apoyo psicológico"],
 }
 
+# Procesar texto a síntomas
 def procesar_sintomas(texto):
     sintomas_detectados = []
     texto = texto.lower()
@@ -81,6 +89,7 @@ def procesar_sintomas(texto):
             sintomas_detectados.append(sintoma)
     return list(set(sintomas_detectados))
 
+# Diagnóstico
 def diagnosticar(sintomas_usuario):
     resultados = {}
     for enfermedad, sintomas in enfermedades.items():
@@ -89,29 +98,30 @@ def diagnosticar(sintomas_usuario):
         if probabilidad > 0:
             resultados[enfermedad] = round(probabilidad * 100, 2)
     resultados_ordenados = dict(sorted(resultados.items(), key=lambda x: x[1], reverse=True))
-    top5 = dict(list(resultados_ordenados.items())[:5])
-    return top5
+    return dict(list(resultados_ordenados.items())[:4])
 
-st.title("🤖 IA de Diagnóstico de Enfermedades")
-entrada = st.text_area("Describe tus síntomas lo más naturalmente posible:")
+# Interfaz
+st.title("🧠 IA de Diagnóstico Emocional y Físico")
+
+entrada = st.text_area("Escribe cómo te sientes o tus síntomas físicos/emocionales (ej: tengo fiebre y no puedo dormir):")
 
 if st.button("Diagnosticar"):
     sintomas_usuario = procesar_sintomas(entrada)
     if sintomas_usuario:
-        st.success(f"🩺 Síntomas detectados: {', '.join(sintomas_usuario)}")
+        st.success(f"Síntomas detectados: {', '.join(sintomas_usuario)}")
         resultados = diagnosticar(sintomas_usuario)
         if resultados:
-            enfermedad_principal = next(iter(resultados))
-            st.subheader("🔎 Enfermedades probables:")
+            enf_principal = next(iter(resultados))
+            st.subheader("🩺 Posibles enfermedades:")
             for enf, prob in resultados.items():
-                st.write(f"**{enf}** — {prob}%")
-            st.subheader(f"💡 Recomendaciones para: {enfermedad_principal}")
-            for rec in recomendaciones.get(enfermedad_principal, ["Consulta a un profesional."]):
+                st.markdown(f"**{enf}** — {prob}%")
+            st.subheader(f"💡 Recomendaciones para: {enf_principal}")
+            for rec in recomendaciones.get(enf_principal, ["Consulta a un especialista."]):
                 st.markdown(f"- {rec}")
         else:
-            st.warning("No se pudo determinar una enfermedad probable.")
+            st.warning("No se encontró ninguna enfermedad coincidente.")
     else:
-        st.warning("No se detectaron síntomas conocidos. Intenta describirlo de otra forma.")
+        st.warning("No se detectaron síntomas reconocibles. Intenta usar otras palabras.")
 
 st.markdown("---")
 st.caption("Creado por Rafah Gondola, Adrián Abadia y Guillermo Sánchez")
